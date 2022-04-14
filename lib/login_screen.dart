@@ -60,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'Sign In',
             style: TextStyle(
                 fontSize: 40.0,
+                fontFamily: 'SourceSansPro',
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.4),
           ),
@@ -74,9 +75,9 @@ class _LoginScreenState extends State<LoginScreen> {
       children: const [
         Text(
           'Email',
-          style: TextStyle(fontSize: 16.0, letterSpacing: 1.4),
+          style: TextStyle(fontSize: 18.0, letterSpacing: 1.4),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 10.0),
         TextField(
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
@@ -96,8 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
       children: const [
         Text(
           'Password',
-          style: TextStyle(fontSize: 16.0, letterSpacing: 1.4),
+          style: TextStyle(fontSize: 18.0, letterSpacing: 1.4),
         ),
+        SizedBox(height: 10.0),
         TextField(
           obscureText: true,
           decoration: InputDecoration(
