@@ -11,6 +11,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
         width: MediaQuery.of(context).size.width,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.redAccent, Colors.lightGreen],
+            colors: [Colors.purple, Colors.lightGreen],
             begin: Alignment.center,
             end: Alignment.bottomCenter,
           ),
@@ -27,24 +30,25 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            children: [
-              _loginText(),
-              const SizedBox(height: 50.0),
-              _emailBlock(),
-              const SizedBox(height: 20.0),
-              _passwordBlock(),
-              const SizedBox(height: 10.0),
-              _forgetPasswordText(),
-              const SizedBox(height: 5.0),
-              _remeberCheckBox(),
-              const SizedBox(height: 30.0),
-              _loginButton(),
-              const SizedBox(height: 30.0),
-              _orText(),
-              const SizedBox(height: 30.0),
-              _loginWithLogos(),
-            ],
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                _loginText(),
+                const SizedBox(height: 50.0),
+                _emailBlock(),
+                const SizedBox(height: 20.0),
+                _passwordBlock(),
+                _forgetPasswordText(),
+                _remeberCheckBox(),
+                const SizedBox(height: 10.0),
+                _loginButton(),
+                const SizedBox(height: 20.0),
+                _orText(),
+                const SizedBox(height: 20.0),
+                _loginWithLogos(),
+              ],
+            ),
           ),
         ),
       ),
@@ -60,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
             'Sign In',
             style: TextStyle(
                 fontSize: 40.0,
-                fontFamily: 'SourceSansPro',
+                fontFamily: 'RobotoSlab',
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.4),
           ),
@@ -72,15 +76,17 @@ class _LoginScreenState extends State<LoginScreen> {
   _emailBlock() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text(
+      children: [
+        const Text(
           'Email',
-          style: TextStyle(fontSize: 18.0, letterSpacing: 1.4),
+          style: TextStyle(
+              fontSize: 18.0, fontFamily: 'RobotoSlab', letterSpacing: 1.4),
         ),
-        SizedBox(height: 10.0),
-        TextField(
+        const SizedBox(height: 5.0),
+        TextFormField(
+          validator: validateEmail,
           keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
               border: OutlineInputBorder(),
               prefixIcon: Icon(
                 Icons.mail,
@@ -94,15 +100,17 @@ class _LoginScreenState extends State<LoginScreen> {
   _passwordBlock() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text(
+      children: [
+        const Text(
           'Password',
-          style: TextStyle(fontSize: 18.0, letterSpacing: 1.4),
+          style: TextStyle(
+              fontSize: 18.0, fontFamily: 'RobotoSlab', letterSpacing: 1.4),
         ),
-        SizedBox(height: 10.0),
-        TextField(
+        const SizedBox(height: 5.0),
+        TextFormField(
+          validator: validatePassword,
           obscureText: true,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             prefixIcon: Icon(
               Icons.lock,
@@ -117,9 +125,16 @@ class _LoginScreenState extends State<LoginScreen> {
   _forgetPasswordText() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      children: const [
-        Text(
-          'Forgot Password?',
+      children: [
+        TextButton(
+          child: const Text(
+            'Forget Password?',
+            style: TextStyle(
+                fontFamily: 'RobotoSlab',
+                color: Colors.black,
+                letterSpacing: 1.2),
+          ),
+          onPressed: () {},
         ),
       ],
     );
@@ -140,7 +155,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 });
               },
             )),
-        const Text('Remember me'),
+        const Text(
+          'Remember me',
+          style: TextStyle(fontFamily: 'RobotoSlab', letterSpacing: 1.2),
+        ),
       ],
     );
   }
@@ -158,10 +176,17 @@ class _LoginScreenState extends State<LoginScreen> {
             'LOGIN',
             style: TextStyle(
               fontSize: 20.0,
+              fontFamily: 'RobotoSlab',
               letterSpacing: 1.6,
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Processing Data')),
+              );
+            }
+          },
         ),
       ],
     );
@@ -174,6 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
           '-OR-',
           style: TextStyle(
             fontSize: 20.0,
+            fontFamily: 'RobotoSlab',
             letterSpacing: 1.5,
           ),
         ),
@@ -182,6 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
           'Sign in with',
           style: TextStyle(
             fontSize: 14.0,
+            fontFamily: 'RobotoSlab',
             letterSpacing: 1.5,
           ),
         ),
@@ -206,4 +233,25 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
   }
+}
+
+String? validateEmail(String? formEmail) {
+  if (formEmail == null || formEmail.isEmpty) {
+    return 'Email is required.';
+  }
+
+  String pattern = r'\w+@\w+\.\w+';
+  RegExp regex = RegExp(pattern);
+  if (!regex.hasMatch(formEmail)) {
+    return 'Invalid E-mail Format';
+  }
+
+  return null;
+}
+
+String? validatePassword(String? formPassword) {
+  if (formPassword == null || formPassword.isEmpty) {
+    return 'Password is required.';
+  }
+  return null;
 }

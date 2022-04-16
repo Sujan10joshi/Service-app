@@ -75,9 +75,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: SourceSansPro
+    - family: RobotoSlab
       fonts:
-        - asset: fonts/SourceSansPro-Regular.ttf
+        - asset: fonts/RobotoSlab-Regular.ttf
           style: italic
     # - family: Trajan Pro
     #   fonts:
